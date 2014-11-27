@@ -1,0 +1,269 @@
+
+#Rule for all Labels
+<Label>:
+    font_name: 'ArchitectsDaughter.ttf'
+    color: 0,0,0,1
+    font_size: 20
+
+#Rule for all Widgets
+<Widget>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            # self here refers to the widget i.e BoxLayout
+            pos: self.pos
+            size: self.size
+
+#Button
+<Button>:
+    background_normal: './data/normal.png'
+    background_down: './data/down.png'
+
+
+<MenuScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            size_hint_y: 0.5
+            text: 'MathWorldKids'
+            font_size: 45
+            canvas.before:
+                Color:
+                    rgba: 1,1,1,1
+                Rectangle:
+                    source: './data/logo.png'
+                    size: self.size[0]/2, self.size[1]
+                    pos: self.center_x/2, self.pos[1]
+
+        BoxLayout:
+            size_hint: 0.6, 1
+            pos_hint: {'center_x': 0.5}
+            padding: 25
+            spacing: 25
+            orientation: 'vertical'
+            Button:
+                text: 'Start'
+                on_release: 
+                    root.click_sound()
+                    root.manager.current = 'start'
+            Button:
+                text: 'Tips & Tricks'
+                on_release:                    
+                    root.click_sound()
+                    root.manager.current = 'help'
+            Button:
+                text: 'About'
+                on_release:                     
+                    root.click_sound()
+                    root.manager.current = 'about'
+            Button:
+                text: 'Quit'
+                on_release: exit()
+
+<StartScreen>:
+    BoxLayout:
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+        Label:
+            size_hint: 0.5, 0.15
+            pos_hint: {'center_x': 0.45}
+            text: 'Start - Select a category'
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 25
+            Button:
+                size_hint: 0.7, 1
+                pos_hint: {'center_x': 0.5}
+                text: 'Javascript'
+                on_release:                    
+                    root.click_sound()                     
+                    root.manager.current = 'game'
+                    app.root.get_screen('game').current_mode = 1
+            Button:
+                size_hint: 0.7, 1
+                pos_hint: {'center_x': 0.5}
+                text: 'Ruby'
+                on_release:                     
+                    root.click_sound()                    
+                    root.manager.current = 'game'
+                    app.root.get_screen('game').current_mode = 2
+            Button:
+                size_hint: 0.7, 1
+                pos_hint: {'center_x': 0.5}
+                text: 'Python'
+                on_release:                      
+                    root.click_sound()                   
+                    root.manager.current = 'game'
+                    app.root.get_screen('game').current_mode = 3
+            Button:
+                size_hint: 0.7, 1
+                pos_hint: {'center_x': 0.5}
+                text: 'C#'
+                on_release:                       
+                    root.click_sound()                  
+                    root.manager.current = 'game'
+                    app.root.get_screen('game').current_mode = 4
+        Button:
+            size_hint: 0.5, 0.1
+            pos_hint: {'center_x': 0.45}
+            text: 'back'
+            on_release:                 
+                root.click_sound()
+                root.manager.current = 'menu'
+
+<GameActionScreen>:
+    on_enter: self.new_game()
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint: 1, 0.15
+            Label:
+                id: label_1
+                text: 'Errors: 0'
+            Label:
+                id: label_2
+                text: 'Session name'
+            Label:
+                id: label_3
+                text: 'Progress 1/10'
+        Label:
+            id: task
+            text: ''
+            font_size: 18
+        GridLayout:
+            cols: 2
+            padding: 25
+            Button:
+                id: button_1
+                text: ''
+                on_release: root.check_answer(self)
+            Button:
+                id: button_2
+                text: ''
+                on_release: root.check_answer(self)
+            Button:
+                id: button_3
+                text: ''
+                on_release: root.check_answer(self)
+            Button:
+                id: button_4
+                text: ''
+                on_release: root.check_answer(self)
+
+<ProgressScreen>:
+    BoxLayout:
+        spacing: 25
+        padding: 25
+        orientation: 'vertical'
+        Label:
+            size_hint: 0.5, 0.15
+            pos_hint: {'center_x': 0.45}
+            text: 'Progress - View all your Achievements'
+        TabbedPanel:
+            do_default_tab: False
+            TabbedPanelItem:
+                text: 'Basic'
+                Label:
+                    text: 'Basic achievements'
+            TabbedPanelItem:
+                text: 'Challenge'
+                Label:
+                    text: 'Challenge achievements'
+            TabbedPanelItem:
+                text: 'Special'
+                Label:
+                    text: 'Coming soon!'
+        Button:
+            size_hint: 0.5, 0.1
+            pos_hint: {'center_x': 0.45}
+            text: 'back'
+            on_release: root.manager.current = 'menu'
+
+<HelpScreen>:
+    BoxLayout:
+        spacing: 25
+        padding: 25
+        orientation: 'vertical'
+        Label:
+            size_hint: 0.5, 0.15
+            pos_hint: {'center_x': 0.45}
+            text: 'Help Screen - Some tips to improve yourself'
+        Label:
+            text: root.help_text()
+        Button:
+            size_hint: 0.5, 0.1
+            pos_hint: {'center_x': 0.45}
+            text: 'back'
+            on_release:                
+                root.click_sound() 
+                root.manager.current = 'menu'
+
+<AboutScreen>:
+    BoxLayout:
+        spacing: 25
+        padding: 25
+        orientation: 'vertical'
+        Label:
+            size_hint: 0.5, 0.15
+            pos_hint: {'center_x': 0.45}
+            text: 'About - Information about this app'
+        Label:
+            text: root.about_text()
+        Button:
+            size_hint: 0.5, 0.1
+            pos_hint: {'center_x': 0.45}
+            text: 'back'
+            on_release:             
+                root.click_sound()
+                root.manager.current = 'menu'
+
+<ResultScreen>:
+    on_enter: root.calculate_result(app.sm.get_screen('game'))
+    BoxLayout:
+        spacing: 25
+        padding: 25
+        orientation: 'vertical'
+        Label:
+            size_hint: 0.5, 0.15
+            pos_hint: {'center_x': 0.45}
+            text: 'Result'
+        BoxLayout:
+            size_hint: 0.2, 0.2
+            pos_hint: {'center_x': 0.45}
+            Image:
+                id: star_1
+                source: './data/star_grey.png'
+            Image:
+                id: star_2
+                source: './data/star_grey.png'
+            Image:
+                id: star_3
+                source: './data/star_grey.png'
+        Label:
+            id: label
+            text: ' '
+        Button:
+            size_hint: 0.5, 0.1
+            pos_hint: {'center_x': 0.45}
+            text: 'back'
+            on_release:                
+                root.click_sound() 
+                root.manager.current = 'menu'
+
+<PopUpQuit>:
+    size_hint: .5, .2
+    auto_dismiss: False
+    title: 'Quit current game?'
+    title_color: 0,0,0,1
+    BoxLayout:
+        padding: 10
+        Button:
+            text: 'No'
+            on_release: root.dismiss()
+        Button:
+            text: 'Yes'
+            on_release:
+                app.sm.current = 'menu'
+                root.dismiss()
