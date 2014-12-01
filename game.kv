@@ -3,13 +3,13 @@
 <Label>:
     font_name: 'ArchitectsDaughter.ttf'
     color: 0,0,0,1
-    font_size: 20
+    font_size: '18sp'
 
 #Rule for all Widgets
 <Widget>:
     canvas.before:
         Color:
-            rgba: 1, 1, 1, 1
+            rgba: 0.666, 1, 0.372, 1
         Rectangle:
             # self here refers to the widget i.e BoxLayout
             pos: self.pos
@@ -26,8 +26,8 @@
         orientation: 'vertical'
         Label:
             size_hint_y: 0.5
-            text: 'MathWorldKids'
-            font_size: 45
+            text: 'CodeQuizz'
+            font_size: '28sp'
             canvas.before:
                 Color:
                     rgba: 1,1,1,1
@@ -46,20 +46,30 @@
                 text: 'Start'
                 on_release: 
                     root.click_sound()
+                    root.background.volume = 0.03
                     root.manager.current = 'start'
             Button:
                 text: 'Tips & Tricks'
                 on_release:                    
                     root.click_sound()
+                    root.background.volume = 0.03
                     root.manager.current = 'help'
             Button:
                 text: 'About'
                 on_release:                     
                     root.click_sound()
+                    root.background.volume = 0.03
                     root.manager.current = 'about'
             Button:
+                text: 'Update'
+                on_release:
+                    root.click_sound()
+                    root.background.volume = 0.03 
+                    root.update_game()
+            Button:
                 text: 'Quit'
-                on_release: exit()
+                on_release:
+                    exit()
 
 <StartScreen>:
     BoxLayout:
@@ -73,14 +83,14 @@
         BoxLayout:
             orientation: 'vertical'
             spacing: 25
-            Button:
-                size_hint: 0.7, 1
-                pos_hint: {'center_x': 0.5}
-                text: 'Javascript'
-                on_release:                    
-                    root.click_sound()                     
-                    root.manager.current = 'game'
-                    app.root.get_screen('game').current_mode = 1
+            #Button:
+            #    size_hint: 0.7, 1
+            #    pos_hint: {'center_x': 0.5}
+            #    text: 'Javascript'
+            #    on_release:                    
+            #        root.click_sound()                     
+            #        root.manager.current = 'game'
+            #        app.root.get_screen('game').current_mode = 1
             Button:
                 size_hint: 0.7, 1
                 pos_hint: {'center_x': 0.5}
@@ -89,22 +99,22 @@
                     root.click_sound()                    
                     root.manager.current = 'game'
                     app.root.get_screen('game').current_mode = 2
-            Button:
-                size_hint: 0.7, 1
-                pos_hint: {'center_x': 0.5}
-                text: 'Python'
-                on_release:                      
-                    root.click_sound()                   
-                    root.manager.current = 'game'
-                    app.root.get_screen('game').current_mode = 3
-            Button:
-                size_hint: 0.7, 1
-                pos_hint: {'center_x': 0.5}
-                text: 'C#'
-                on_release:                       
-                    root.click_sound()                  
-                    root.manager.current = 'game'
-                    app.root.get_screen('game').current_mode = 4
+            #Button:
+            #    size_hint: 0.7, 1
+            #    pos_hint: {'center_x': 0.5}
+            #    text: 'Python'
+            #    on_release:                      
+            #        root.click_sound()                   
+            #        root.manager.current = 'game'
+            #        app.root.get_screen('game').current_mode = 3
+            #Button:
+            #    size_hint: 0.7, 1
+            #    pos_hint: {'center_x': 0.5}
+            #    text: 'C#'
+            #    on_release:                       
+            #        root.click_sound()                  
+            #        root.manager.current = 'game'
+            #        app.root.get_screen('game').current_mode = 4
         Button:
             size_hint: 0.5, 0.1
             pos_hint: {'center_x': 0.45}
@@ -119,7 +129,7 @@
         orientation: 'vertical'
         BoxLayout:
             size_hint: 1, 0.15
-            Label:
+            Label:                
                 id: label_1
                 text: 'Errors: 0'
             Label:
@@ -131,6 +141,7 @@
         Label:
             id: task
             text: ''
+            text_size: self.width/1.1, None
             font_size: 18
         GridLayout:
             cols: 2
@@ -189,7 +200,7 @@
         Label:
             size_hint: 0.5, 0.15
             pos_hint: {'center_x': 0.45}
-            text: 'Help Screen - Some tips to improve yourself'
+            text: 'Help Screen'
         Label:
             text: root.help_text()
         Button:
@@ -208,7 +219,7 @@
         Label:
             size_hint: 0.5, 0.15
             pos_hint: {'center_x': 0.45}
-            text: 'About - Information about this app'
+            text: 'About'
         Label:
             text: root.about_text()
         Button:
@@ -240,6 +251,12 @@
                 source: './data/star_grey.png'
             Image:
                 id: star_3
+                source: './data/star_grey.png'            
+            Image:
+                id: star_4
+                source: './data/star_grey.png'            
+            Image:
+                id: star_5
                 source: './data/star_grey.png'
         Label:
             id: label

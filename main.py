@@ -3,20 +3,40 @@ from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
 from kivy.core.window import Window
 from kivy.core.audio import SoundLoader
 from kivy.uix.popup import Popup
+from kivy.uix.label import Label
 from kivy.clock import Clock
 from kivy.graphics import Color
 import time
 import threading
 import thread
+from question import ListQuestions
 from taskCreator import *
 
 
 # Declare both screens
 class MenuScreen(Screen):
     sound = SoundLoader.load("sounds/click.ogg")
+    background = SoundLoader.load("sounds/background.ogg")
+    background.loop = True
+    background.volume = 0.09
+    background.play()
+
+    def update_game(self):
+        pop = Popup(title='Updating', content=Label(text='Questions been updated'), auto_dismiss=False)
+        pop.open()
+
+        
+        Clock.schedule_once(self.update, 0)
+        pop.dismiss()
+
+
 
     def click_sound(self):        
         self.sound.play()
+
+    def update(self,event):
+        l = ListQuestions()
+        l.update()
 
 
 class StartScreen(Screen):
@@ -44,7 +64,7 @@ class GameActionScreen(Screen):
 
     def new_game(self):
         self.Tasks = TaskCreator()
-        self.round_number = 0
+        self.round_number = 1
         t1 = threading.Thread(target=self.load_sounds)
         t1.start()
         self.set_next_task()
@@ -91,8 +111,10 @@ class GameActionScreen(Screen):
             self.ids.label_3.text = str(self.round_number) + " / " + str(self.max_rounds)
             self.errors_made += 1
             self.ids.label_1.text = "Errors: " + str(self.errors_made)
+
             self.ids.task.markup = True
-            self.ids.task.text = '[color=#ff3333]'+self.ids.task.text+'[/color]'
+            self.ids.task.text = '[color=#ff3333]'+self.task_values[6]+'[/color]'
+
             button_pressed.background_normal = './data/error.png'
 
             t2 = threading.Thread(target=self.response)
@@ -110,9 +132,18 @@ class GameActionScreen(Screen):
     def wrong_sound(self):
         self.sounds[1].play()
 
-    def response(self):        
+    def response(self):     
+        time.sleep(1)
+        self.ids.button_1.disabled = True
+        self.ids.button_2.disabled = True
+        self.ids.button_3.disabled = True
+        self.ids.button_4.disabled = True     
         time.sleep(1)
         self.set_next_task()
+        self.ids.button_1.disabled = False
+        self.ids.button_2.disabled = False
+        self.ids.button_3.disabled = False
+        self.ids.button_4.disabled = False   
 
 
 
@@ -126,15 +157,28 @@ class ResultScreen(Screen):
 
     def calculate_result(self, screen):
         if screen.errors_made <= 1:
+            self.ids.star_5.source = './data/star.png'
+            self.ids.star_4.source = './data/star.png'
             self.ids.star_3.source = './data/star.png'
             self.ids.star_2.source = './data/star.png'
             self.ids.star_1.source = './data/star.png'
             self.ids.label.text = 'Excellent!\n\n'
-        elif screen.errors_made <= 3:
+        elif screen.errors_made <= 2:
+            self.ids.star_4.source = './data/star.png'
+            self.ids.star_3.source = './data/star.png'
             self.ids.star_2.source = './data/star.png'
             self.ids.star_1.source = './data/star.png'
             self.ids.label.text = 'Very good!\n\n Close to perfect. Keep up!'
-        elif screen.errors_made <= 5:
+        elif screen.errors_made <= 4:
+            self.ids.star_3.source = './data/star.png'
+            self.ids.star_2.source = './data/star.png'
+            self.ids.star_1.source = './data/star.png'
+            self.ids.label.text = 'Good!\n\n Train more!'
+        elif screen.errors_made <= 6:
+            self.ids.star_2.source = './data/star.png'
+            self.ids.star_1.source = './data/star.png'
+            self.ids.label.text = 'Good!\n\n Train more!'
+        elif screen.errors_made <= 8:
             self.ids.star_1.source = './data/star.png'
             self.ids.label.text = 'Good!\n\n Train more!'
         else:
@@ -149,16 +193,14 @@ class HelpScreen(Screen):
         self.sound.play()
 
     def help_text(self):
-        return "Here i will provide simple tricks to become faster when\n" \
-               "doing mental calculations.\n" \
-               "Example: Instead of adding 5 to a digit greater than 5,\n" \
-               "its often more simple to subtract 5 and then add 10.\n" \
-               " 8 + 5 = ?\n" \
-               " 8 - 5 = 3; 3 + 10 = 13\n" \
+        return "Hi XD\n" \
+               "This game will provide you some questions about programming languages.\n" \
+               "After each question you can read an explanation of the answer\n" \
+               "If your answer is wrong.\n" \
+               "\n" \
+               "Any problem or bug report this email:\n" \
                "\n"\
-               "Or add in two steps, first to get to an more easy number, \n" \
-               "then whatever remains.\n" \
-               "More will follow soon!\n"
+               "Email\n"
 
 
 class AboutScreen(Screen):
@@ -168,16 +210,12 @@ class AboutScreen(Screen):
         self.sound.play()
 
     def about_text(self):
-        return "Made by: Jonas\n" \
-               "Open source and free of charge \n" \
+        return "Made by: Gui Carneiro\n" \
                "\n" \
-               "Features:\n" \
-               "  - simple\n" \
-               "  - rewarding\n" \
-               "  - perfect for kids in elementary school\n" \
-               "  - or adults who want to train their brain ;)\n" \
-               "  - never gets old, new content is generated procedurally\n" \
-               "  - written in Python with the help of Kivy"
+               "Hi =)\n" \
+               "This is a simple project I did for one of my courses.\n" \
+               "Enjoy and learn, you can find the code in this link:\n" \
+               "  Link"
 
 class PopUpQuit(Popup):
     pass
