@@ -64,7 +64,7 @@ class GameActionScreen(Screen):
 
     def new_game(self):
         self.Tasks = TaskCreator()
-        self.round_number = 1
+        self.round_number = 0
         t1 = threading.Thread(target=self.load_sounds)
         t1.start()
         self.set_next_task()
@@ -89,9 +89,7 @@ class GameActionScreen(Screen):
         self.ids.button_4.background_normal = "./data/normal.png"
 
     def check_answer(self, button_pressed):
-        if self.round_number == self.max_rounds:
-            self.manager.current = 'result'
-        elif button_pressed.text == self.task_values[1]:
+        if button_pressed.text == self.task_values[1]:
             t1 = threading.Thread(target=self.correct_sound)
             t1.start()
 
@@ -99,9 +97,6 @@ class GameActionScreen(Screen):
 
             self.round_number += 1
             self.ids.label_3.text = str(self.round_number) + " / " + str(self.max_rounds)
-            
-            t2 = threading.Thread(target=self.response)
-            t2.start()
         else:
             t1 = threading.Thread(target=self.wrong_sound)
             t1.start()
@@ -115,8 +110,11 @@ class GameActionScreen(Screen):
             self.ids.task.markup = True
             self.ids.task.text = '[color=#ff3333]'+self.task_values[6]+'[/color]'
 
-            button_pressed.background_normal = './data/error.png'
+            button_pressed.background_normal = './data/error.png'            
 
+        if self.round_number == self.max_rounds:
+            self.manager.current = 'result'
+        else: 
             t2 = threading.Thread(target=self.response)
             t2.start()
 
@@ -139,11 +137,14 @@ class GameActionScreen(Screen):
         self.ids.button_3.disabled = True
         self.ids.button_4.disabled = True     
         time.sleep(1)
-        self.set_next_task()
         self.ids.button_1.disabled = False
         self.ids.button_2.disabled = False
         self.ids.button_3.disabled = False
-        self.ids.button_4.disabled = False   
+        self.ids.button_4.disabled = False
+
+        self.set_next_task()
+
+        
 
 
 
